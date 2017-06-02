@@ -1,6 +1,7 @@
 var path = require('path');
 var webpack = require('webpack'); //to access built-in plugins
-var HtmlWebpackPlugin = require('html-webpack-plugin'); //installed via npm
+const HtmlWebpackPlugin = require('html-webpack-plugin'); //installed via npm
+const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({ template: './src/index.html' });
 
 var config = {
     entry: './src/app/index.js',
@@ -9,32 +10,34 @@ var config = {
         filename: 'index.bundle.js'
     },
     module: {
-        // loaders: [
-        //     {
-        //         test: /\.js$/,
-        //         loader: 'babel-loader',
-        //         query: {
-        //             presets: ['es2015']
-        //         }
-        //     }
-        // ]
         rules: [
-            {test: /\.(js|jsx)$/, use: 'babel-loader'},
-            {test: /\.css$/, use: [
-                { loader: 'style-loader'},
+            {
+                test: /\.js$/,
+                loader: 'babel-loader'
+            },
+            {
+                test: /\.css$/,
+                use: [{
+                    loader: 'style-loader'
+                },
                 {
                     loader: 'css-loader',
                     options: {
                         modules: true
                     }
-                }
-            ]},
-            {exclude: /node_modules/}
+                }]
+            },
+            {
+                test: /\.html$/,
+                loader: 'html-loader'
+            },
+            {
+                exclude: '/node_modules/'
+            }
         ]
     },
-    plugins: [
-        new webpack.optimize.UglifyJsPlugin({sourceMap: true}),
-        new HtmlWebpackPlugin({template: './src/index.html'}),
+    plugins: [HtmlWebpackPluginConfig,
+        new webpack.optimize.UglifyJsPlugin({ sourceMap: true }),
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery"
